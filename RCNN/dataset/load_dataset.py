@@ -90,7 +90,7 @@ final_json_list = []
 
 for i in range(len(filenames)):
     filename = filenames[i]
-    if len(bounding_boxes[i] == 0):
+    if len(bounding_boxes[i]) == 0:
          boxObj = {"filename": filename, "startx": 0, "starty": 0, "endx": 0, "endy": 0}
          final_json_list.append(boxObj)
 

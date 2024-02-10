@@ -1,17 +1,19 @@
-from pyimagesearch import config
-from tensorflow.keras.applications import VGG16
-from tensorflow.keras.layers import Flatten
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import Input
-from tensorflow.keras.models import Model
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.preprocessing.image import img_to_array
-from tensorflow.keras.preprocessing.image import load_img
+
+import tensorflow as tf
+# from tf.keras.applications import VGG16
+# from tf.keras.layers import Flatten
+# from tensorflow.keras.layers import Dense
+# from tensorflow.keras.layers import Input
+# from tensorflow.keras.models import Model
+# from tensorflow.keras.optimizers import Adam
+# from tensorflow.keras.preprocessing.image import img_to_array
+# from tensorflow.keras.preprocessing.image import load_img
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 import os
+import json
 
 # load the contents of the CSV annotations file
 print("[INFO] loading dataset...")
@@ -23,6 +25,12 @@ data = []
 targets = []
 filenames = []
 
+file_path = '/Users/eishahemchand/Mineral-Intelligence/final_output.json'
+
+# Open and load the JSON data into a Python list
+with open(file_path, 'r') as file:
+    rows = json.load(file)
+
 
 # loop over the rows
 for row in rows:
@@ -32,7 +40,7 @@ for row in rows:
 
     # derive the path to the input image, load the image (in OpenCV
 	# format), and grab its dimensions
-	imagePath = os.path.sep.join([config.IMAGES_PATH, filename])
+	imagePath = filename.copy()
 	image = cv2.imread(imagePath)
 	(h, w) = image.shape[:2]
 	# scale the bounding box coordinates relative to the spatial
@@ -64,10 +72,10 @@ split = train_test_split(data, targets, filenames, test_size=0.10,
 (trainFilenames, testFilenames) = split[4:]
 # write the testing filenames to disk so that we can use then
 # when evaluating/testing our bounding box regressor
-print("[INFO] saving testing filenames...")
-f = open(config.TEST_FILENAMES, "w")
-f.write("\n".join(testFilenames))
-f.close()
+# print("[INFO] saving testing filenames...")
+# f = open(config.TEST_FILENAMES, "w")
+# f.write("\n".join(testFilenames))
+# f.close()
 
 
 
@@ -91,7 +99,7 @@ model = Model(inputs=vgg.input, outputs=bboxHead)
 
 # initialize the optimizer, compile the model, and show the model
 # summary
-opt = Adam(lr=config.INIT_LR)
+opt = Adam(lr=1e-4)
 model.compile(loss="mse", optimizer=opt)
 print(model.summary())
 # train the network for bounding box regression
@@ -99,8 +107,8 @@ print("[INFO] training bounding box regressor...")
 H = model.fit(
 	trainImages, trainTargets,
 	validation_data=(testImages, testTargets),
-	batch_size=config.BATCH_SIZE,
-	epochs=config.NUM_EPOCHS,
+	batch_size=32,
+	epochs=25,
 	verbose=1)
 
 
