@@ -1,4 +1,3 @@
-import labelbox
 import json 
 
 # Enter your Labelbox API key here
@@ -77,7 +76,7 @@ bounding_boxes = []
 for annotation in annotations:
     filenames.append(annotation["data_row"]["external_id"])
 
-    bounding_boxes.append(extract_bounding_box(annotation, "header"))
+    bounding_boxes.append(extract_bounding_box(annotation, "preamble"))
 
     #extract_bounding_box(annotation, "header")
 
@@ -124,7 +123,7 @@ for i in range(len(filenames)):
 json_array_final = json.dumps(final_json_list, indent=4)
 
 # # Optionally, write the JSON array to a new JSON file
-with open('final_output.json', 'w') as json_file:
+with open('final_output_preamble.json', 'w') as json_file:
     json_file.write(json_array_final)
 
 
