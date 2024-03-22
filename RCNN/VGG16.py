@@ -86,7 +86,7 @@ class CustomVGG16(nn.Module):
 
         # Initialize classifier from argument
 
-        self.classifier = nn.Sequential(*classifier_layers)
+        #self.classifier = nn.Sequential(*classifier_layers)
 
         
         # # Custom layers for bounding box regression
@@ -104,7 +104,7 @@ class CustomVGG16(nn.Module):
     
     def forward(self, x):
         x = self.features(x)  # Pass through the feature extractor
-        x = self.classifier(x)  # Pass through the custom classifier
+        #x = self.classifier(x)  # Pass through the custom classifier
         return x
 
 
